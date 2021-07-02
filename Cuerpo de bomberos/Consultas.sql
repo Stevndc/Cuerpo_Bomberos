@@ -1,0 +1,57 @@
+ -- #1 Consultar cuantos siniestrso  han ocurrido en cada sector  
+ SELECT 
+_SECTOR_NOMBRE as SECTOR_SINIESTRO,
+MISION_MOTIVO_SINIESTRO as SINIESTRO,
+COUNT ( MISION_MOTIVO_SINIESTRO)as CANTIDAD
+FROM MISIONES_
+INNER JOIN SECTORES_MANTA ON MISIONES_.MISION_ID = SECTORES_MANTA._SECTOR_ID
+GROUP BY
+_SECTOR_NOMBRE,
+MISION_MOTIVO_SINIESTRO
+ORDER BY 
+_SECTOR_NOMBRE
+
+ --#2. Consultar  los bomberos que pertenecen a la estación de la Parroquia Eloy Alfaro.
+SELECT
+ESTACION_DIRECCION as direccion_estacion_central,
+BOMBERO__ID,
+_BOMBERO_CEDULA as cedula_de_bombero,
+BOMBERO_NOMBRE as nombre_de_bombero,
+BOMBERO_APELLIDO as apellido_de_bombero
+FROM bombero
+INNER JOIN ESTACION ON bombero._ESTACION_ID = ESTACION._ESTACION_ID
+WHERE ESTACION._ESTACION_ID = '03'
+
+ 
+ ---#3 Consultar los bomberos que han dado mantenimiento a los vehiculos de las estaciones
+SELECT 
+ bombero_nombre as bombero_nombre,  
+ vehiculo_marca as marca, 
+ _vehiculo_tipo as tipo ,
+ _mantenimiento_fecha as mantenimiento_fecha,
+estacion_direccion as estacion 
+FROM public.mantenimiento 
+INNER JOIN PUBLIC.BOMBERO ON BOMBERO.BOMBERO__ID =MANTENIMIENTO.MANTENIMIENTO_ID
+INNER JOIN PUBLIC.VEHICULO ON VEHICULO.VEHICULO_ID =MANTENIMIENTO.MANTENIMIENTO_ID 
+INNER JOIN PUBLIC.ESTACION ON VEHICULO.VEHICULO_ID =ESTACION._ESTACION_ID 
+ORDER BY
+_mantenimiento_fecha
+
+
+ 
+--#4Consultar la cantidad de cada tipo de sangre de los bomberos de cada estacion
+SELECT
+ESTACION_DIRECCION AS ESTACION,
+_BOMBERO_TIPOSANGRE as TIPO_SANGRE_BOMBERO, 
+COUNT(_BOMBERO_TIPOSANGRE)as CANTIDAD_BOMBEROS
+FROM PUBLIC.BOMBERO
+INNER JOIN PUBLIC.ESTACION ON ESTACION._ESTACION_ID =BOMBERO._ESTACION_ID
+WHERE
+(_BOMBERO_TIPOSANGRE like '%P%') OR (_BOMBERO_TIPOSANGRE like '%N%')
+GROUP BY
+_BOMBERO_TIPOSANGRE,
+ESTACION_DIRECCION 
+ORDER BY
+ESTACION_DIRECCION 
+
+ 
